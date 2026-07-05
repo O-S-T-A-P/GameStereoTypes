@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>游戏人设鉴定 · 16种玩家原型</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #0A0C15;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .game-box {
+            max-width: 820px;
+            width: 100%;
+            background: #151E2C;
+            border-radius: 40px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 200, 100, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+        .header {
+            padding: 24px 28px 12px 28px;
+            background: #0F1620;
+            border-bottom: 1px solid #FFD96630;
+        }
+        h1 {
+            margin: 0;
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFE6B3, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            color: #AAB7E6;
+            margin-top: 6px;
+            font-size: 0.85rem;
+        }
+        .progress-area {
+            padding: 16px 28px 0 28px;
+        }
+        .progress-bar-bg {
+            background: #2E3A4A;
+            border-radius: 100px;
+            height: 8px;
+        }
+        .progress-fill {
+            background: #FFB347;
+            width: 0%;
+            height: 100%;
+            border-radius: 100px;
+            transition: width 0.3s;
+        }
+        .q-counter {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #AAB7E6;
+            margin-bottom: 8px;
+        }
+        .quiz-card {
+            padding: 28px;
+        }
+        .question-text {
+            font-size: 1.55rem;
+            font-weight: 600;
+            line-height: 1.35;
+            margin-bottom: 32px;
+            color: #FEF3D6;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 40px;
+        }
+        .option {
+            background: #1E2A3A;
+            border: 1px solid #FFD96630;
+            border-radius: 30px;
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .option:hover {
+            background: #2A3A50;
+            border-color: #FFB347;
+        }
+        .option.selected {
+            background: #FFB34720;
+            border-color: #FFB347;
+            box-shadow: 0 0 0 1px #FFB347;
+        }
+        .radio-custom {
+            width: 22px;
+            height: 22px;
+            border-radius: 22px;
+            background: #2E3A4A;
+            border: 2px solid #8FA0C0;
+            margin-right: 18px;
+            flex-shrink: 0;
+        }
+        .option.selected .radio-custom {
+            background: #FFB347;
+            border-color: #FFE0A3;
+        }
+        .option-text {
+            font-size: 1rem;
+            line-height: 1.4;
+            color: #E9F0FF;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        button {
+            background: #2A3A50;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FEF3D6;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            flex: 1;
+        }
+        button.primary {
+            background: #FFB347;
+            color: #0A0C15;
+            box-shadow: 0 2px 10px rgba(255, 180, 71, 0.4);
+        }
+        button.primary:hover {
+            background: #FFA01E;
+            transform: translateY(-1px);
+        }
+        .result-area {
+            padding: 28px;
+            background: #0F1620;
+            border-top: 1px solid #FFD96630;
+            color: #F0E6D0;
+        }
+        .result-type {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+            background: linear-gradient(115deg, #FFE6B3, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .result-sub {
+            font-size: 1rem;
+            color: #AAB7E6;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .result-stats {
+            background: #1A2535;
+            border-radius: 24px;
+            padding: 14px 16px;
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+        }
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            color: #F0E6D0;
+            min-width: 60px;
+        }
+        .stat-bar-bg {
+            background: #2E3A4A;
+            height: 8px;
+            border-radius: 8px;
+            margin: 8px 0 4px;
+            overflow: hidden;
+        }
+        .stat-bar-fill {
+            background: #FFB347;
+            height: 100%;
+            width: 0%;
+            border-radius: 8px;
+        }
+        .copy-btn,
+        .restart-btn {
+            margin-top: 18px;
+            width: 100%;
+        }
+        footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 0.7rem;
+            color: #7A8AAA;
+            border-top: 1px solid #FFD96620;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        footer .watermark {
+            font-size: 0.6rem;
+            color: #4A5570;
+            letter-spacing: 1px;
+            font-weight: 300;
+            opacity: 0.6;
+        }
+        .result-area div,
+        .result-area span,
+        .result-area p {
+            color: #F0E6D0;
+        }
+        .result-area .rec-tag {
+            color: #FFE6B3;
+        }
+
+        .profile-card {
+            background: #1A2535;
+            border-radius: 24px;
+            padding: 20px 22px;
+            margin: 18px 0;
+            border: 1px solid #FFD96630;
+        }
+        .profile-main {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #FFD966;
+        }
+        .profile-sub {
+            font-size: 1.1rem;
+            color: #AAB7E6;
+            margin-top: 4px;
+        }
+        .profile-danger {
+            display: inline-block;
+            background: #2A1A1A;
+            border: 1px solid #FF6B4A40;
+            border-radius: 40px;
+            padding: 4px 16px;
+            font-size: 0.8rem;
+            color: #FF6B4A;
+            margin-top: 12px;
+        }
+        .profile-quote {
+            font-style: italic;
+            color: #C9D2F0;
+            padding: 12px 0 8px 0;
+            border-top: 1px solid #2E3A4A;
+            margin-top: 14px;
+        }
+        .profile-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #AAB7E6;
+        }
+        .profile-meta span {
+            color: #F0E6D0;
+        }
+        .profile-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .profile-tag {
+            background: #2A3A50;
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-size: 0.8rem;
+            color: #FFE6B3;
+        }
+        .profile-nemesis {
+            background: #2A1A1A40;
+            border: 1px solid #FF6B4A20;
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-size: 0.8rem;
+            color: #FF8A6A;
+        }
+
+        .result-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+        .result-buttons button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .result-buttons .btn-save {
+            background: #FFB347;
+            color: #0A0C15;
+            box-shadow: 0 2px 10px rgba(255, 180, 71, 0.3);
+        }
+        .result-buttons .btn-save:hover {
+            background: #FFA01E;
+            transform: translateY(-1px);
+        }
+        .result-buttons .btn-copy {
+            background: #2A3A50;
+            color: #FEF3D6;
+            border: 1px solid #FFD96630;
+        }
+        .result-buttons .btn-copy:hover {
+            background: #3A4A60;
+        }
+        .result-buttons .btn-restart {
+            background: #2A3A50;
+            color: #FEF3D6;
+            border: 1px solid #FFD96630;
+        }
+        .result-buttons .btn-restart:hover {
+            background: #3A4A60;
+        }
+
+        /* 单端维度展示 */
+        .dimension-item {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+        .dimension-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #FFD966;
+            margin-bottom: 2px;
+        }
+        .dimension-bar-bg {
+            background: #2E3A4A;
+            height: 6px;
+            border-radius: 6px;
+            margin: 4px 0 2px 0;
+            overflow: hidden;
+        }
+        .dimension-bar-fill {
+            background: #FFB347;
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        .dimension-percent {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #F0E6D0;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-box" id="app">
+        <div class="header">
+            <h1>🎭 游戏人设鉴定</h1>
+            <div class="sub">测测你是哪种玩家 · 16种游戏圈经典原型</div>
+        </div>
+        <div class="progress-area">
+            <div class="q-counter" id="questionCounter">0 / 12</div>
+            <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="quiz-card" id="quizCard"></div>
+        <div class="result-area" id="resultArea" style="display: none;"></div>
+        <footer>
+            <span>⚡ 看看谁才是游戏婆罗门</span>
+            <span class="watermark">© OCTAP</span>
+        </footer>
+    </div>
+
+    <script>
+        // =====================================================
+        // 1. 16种玩家原型
+        // =====================================================
+        const PERSONALITY = {
+            "EZCA": { name: "💎 外貌协会", tagline: "为了皮肤氪648，游戏可以不好玩，但角色不能不好看。好看比好玩重要，外观就是正义。", danger: "★★★★★",
+                quote: "等等，这个角度再拍一张。" },
+            "EZCG": { name: "📸 截图仙人", tagline: "游戏可以不打，但图不能不截。游戏时长40小时，截图文件夹20G。", danger: "★★★★☆",
+                quote: "这光影绝了，再拍一张。" },
+            "EZRA": { name: "🗺️ 地图全开强迫症", tagline: "地图99%会睡不着，世界毁灭前先找最后一个宝箱。世界可以毁灭，但地图必须全亮。", danger: "★★★★★",
+                quote: "等等，左边那个洞还没进去。" },
+            "EZRG": { name: "📖 虚构史学家", tagline: "一个不存在的世界，你比编剧还清楚它的历史。故事比玩法更重要，你比编剧更懂它的历史。", danger: "★★★☆☆",
+                quote: "你注意到这个NPC的姓氏了吗？" },
+            "PZCA": { name: "⚔️ 受苦圣体", tagline: "Boss打一百遍，快乐就来了。Boss越难，我越兴奋。", danger: "★★★★★",
+            quote: "我死了一百次，但我快乐。" },
+            "PZCG": { name: "🧮 攻略启动器", tagline: "玩之前先看三小时B站攻略，玩的时候只需要按流程走。", danger: "★★☆☆☆",
+                quote: "我先看完攻略再玩。" },
+            "PZRA": { name: "📊 数值计算器", tagline: "Excel才是真正的游戏本体。伤害差0.1%都不能忍，Excel才是本体。", danger: "★★★☆☆",
+                quote: "这Build差了2.7%，重配。" },
+            "PZRG": { name: "🐒 整活UP", tagline: "发现一个逃课打法，比通关本身还开心。这游戏又被你玩坏了。", danger: "★★★★☆",
+                quote: "这个BUG我昨天发现了一个新用法。" },
+            "PDCA": { name: "🎒 囤囤鼠", tagline: "背包永远99/100，但一件都舍不得卖。背包满了？我还能再塞一瓶药。", danger: "★★☆☆☆",
+                quote: "万一后面用得到呢？" },
+            "PDCG": { name: "💤 支线失踪人口", tagline: "主线是什么？我在钓鱼。你主线打到哪了？——啊？", danger: "★★★☆☆",
+                quote: "主线？我先把这个支线做完。" },
+            "PDRA": { name: "🔥 赌狗", tagline: "十连梭哈，出了就是天选。出了血赚，没出下一单。", danger: "★★★★★",
+            quote: "下一单必出。" },
+            "PDRG": { name: "👑 全成就猎人", tagline: "奖杯100%，人生才能圆满。白金才是通关，其他都是试玩。", danger: "★★★★☆",
+                quote: "白金了才算通关。" },
+            "VZCA": { name: "🤝 社牛带飞哥", tagline: "天天拉朋友入坑，然后自己A了。拉你入坑是我的乐趣，我A了不代表你也要A。", danger: "★★☆☆☆",
+                quote: "这个游戏我拉了三个人入坑。" },
+            "VZCG": { name: "😈 鼠鼠", tagline: "你不一定是最强的，但你一定是最阴的。你别动，让我看看你在哪。", danger: "★★★★★",
+                quote: "我蹲了三分钟，终于等到你了。" },
+            "VZRA": { name: "🚀 速通患者", tagline: "能跳过剧情，绝对不看一眼。跳过剧情是对我最大的尊重。", danger: "★★★★☆",
+                quote: "剧情？那是浪费时间。" },
+            "VZRG": { name: "🛠️ MOD炼金术师", tagline: "游戏启动器才是真正的游戏，本体只是MOD容器。", danger: "★★★☆☆",
+                quote: "这个MOD冲突了我修一下。" }
+        };
+
+        // =====================================================
+        // 2. 12道题
+        // =====================================================
+        const QUESTIONS = [{
+            text: "🎮 你打开一款新游戏，第一步是？",
+            options: [
+                { text: "🎨 捏脸两小时，必须好看", scores: { E: 1, Z: 0, C: 0, A: 0 } },
+                { text: "📖 研究职业、属性、Build", scores: { E: -1, Z: 0, C: 0, A: 0 } },
+                { text: "⚡ 默认角色，直接进游戏", scores: { E: -0.5, Z: 0, C: 0, A: 0 } },
+                { text: "🤡 捏个搞笑角色，发群里", scores: { E: 0.5, Z: 0, C: 0, A: 0.8 } }
+            ]
+        }, {
+            text: "🗺️ 你走出新手村，地图出现三条岔路，你会？",
+            options: [
+                { text: "🔍 全部走一遍，不留死角", scores: { E: 0, Z: 1, C: 0, A: 0 } },
+                { text: "🎯 哪有三条岔路？我就直接往主线去了", scores: { E: 0, Z: -1, C: 0, A: 0 } },
+                { text: "🗺️ 先看地图，规划路线", scores: { E: 0, Z: 0.3, C: 0, A: 0 } },
+                { text: "📱 问朋友走哪条", scores: { E: 0, Z: 0, C: 0, A: 0.8 } }
+            ]
+        }, {
+            text: "⚔️ 第一个Boss你死了十几次，你会？",
+            options: [
+                { text: "💢 死磕！练到会为止", scores: { E: 0, Z: 1, C: 1, A: 0 } },
+                { text: "🧠 研究机制，想清楚再打", scores: { E: 0, Z: 0.8, C: 0, A: 0 } },
+                { text: "📱 查逃课打法，找最轻松的过法", scores: { E: 0, Z: 0, C: -0.8, A: 0 } },
+                { text: "📞 叫朋友上线帮我打", scores: { E: 0, Z: 0, C: -0.5, A: 0.8 } },
+                { text: "😤 不玩了，换个游戏", scores: { E: 0, Z: -1, C: -0.8, A: 0 } }
+            ]
+        }, {
+            text: "🛡️ 你获得一件传奇装备，属性很强但外观很丑，你会？",
+            options: [
+                { text: "💎 不穿，太丑了", scores: { E: 0.5, Z: 0, C: 0, A: 0.8 } },
+                { text: "📊 当然穿，属性最重要", scores: { E: 0, Z: 0, C: 0, A: -1 } },
+                { text: "🛠️ 打个幻化MOD", scores: { E: 0, Z: 0, C: 0, A: 0.4 } },
+                { text: "🎭 穿上去截图发朋友圈", scores: { E: 0, Z: 0, C: 0, A: 0.2 } }
+            ]
+        }, {
+            text: "🎴 抽卡池出了新角色——强度T0但你不喜欢，XP角色强度一般但很戳你，你抽谁？",
+            options: [
+                { text: "💎 抽XP！好看就是正义，强度无所谓", scores: { E: 0.3, Z: 0, C: 0, A: 0.9 } },
+                { text: "📊 抽强度，XP不能当饭吃", scores: { E: 0, Z: 0, C: 0, A: -1 } },
+                { text: "💸 都抽，氪就完了，小孩子才做选择", scores: { E: 0.2, Z: 0, C: 0, A: -0.3 } },
+                { text: "📢 先抽XP，然后去论坛哭弱，跟策划对线求加强", scores: { E: 0.3, Z: 0, C: 0.6, A: 0.7 } }
+            ]
+        }, {
+            text: "👤 你玩到一个角色的个人线结局，但你觉得这个结局配不上这个角色，你会？",
+            options: [
+                { text: "📝 去论坛发帖，分析为什么这个结局不合理", scores: { E: 0, Z: 0.8, C: 0, A: 0.6 } },
+                { text: "🔍 去网上搜有没有隐藏结局", scores: { E: 0, Z: 0.9, C: 0, A: 0.3 } },
+                { text: "📢 找官方反馈，问能不能改", scores: { E: 0, Z: 0.6, C: 0.5, A: 0.3 } },
+                { text: "💨 无所谓，反正我一般不看剧情", scores: { E: 0, Z: -1, C: 0, A: 0 } }
+            ]
+        }, {
+            text: "🗺️ 你通关了，回头一看地图还有大片未探索，你会？",
+            options: [
+                { text: "💰 血赚！游戏还有内容", scores: { E: 0.8, Z: 0.5, C: 0, A: 0 } },
+                { text: "🎯 管他探索多少，主线都打完了就是通关了", scores: { E: 0, Z: -0.8, C: 0, A: 0 } },
+                { text: "😤 亏了！早知道先查攻略再打了", scores: { E: 0, Z: 0, C: 0.6, A: 0.4 } },
+                { text: "📸 安啦我早就把最漂亮的地方都逛完了", scores: { E: 0.3, Z: 0, C: 0, A: 0.7 } }
+            ]
+        }, {
+            text: "🧮 你卡关了，什么时候会打开B站看攻略？",
+            options: [
+                { text: "💢 通关后，看看自己漏了什么", scores: { E: 0, Z: 0, C: 1, A: 0 } },
+                { text: "📖 卡住五分钟就查", scores: { E: 0, Z: 0, C: -1, A: 0 } },
+                { text: "🔍 先自己研究，实在不行再查", scores: { E: 0, Z: 0, C: 0.3, A: 0 } },
+                { text: "📱 看攻略比玩游戏还多", scores: { E: 0, Z: 0, C: -0.8, A: 0 } }
+            ]
+        }, {
+            text: "🧩 你在玩一个解谜游戏，花了一小时终于解开了，然后发现这只是个教学关，你会？",
+            options: [
+                { text: "🧠 教学关就这么难？我喜欢", scores: { E: 0, Z: 0, C: 0.8, A: 0 } },
+                { text: "🔍 我肯定漏了什么——回头把所有场景重新点一遍", scores: { E: 0, Z: 0.7, C: 0, A: 0 } },
+                { text: "📖 上B站看别人怎么过的", scores: { E: 0, Z: 0, C: -0.7, A: 0 } },
+                { text: "🤷 我不玩解谜", scores: { E: 0, Z: -0.5, C: 0, A: 0 } }
+            ]
+        }, {
+            text: "🎬 通关后，你一般会做什么？",
+            options: [{
+                text: "📸 游戏时长40h，截图文件夹20G",
+                scores: { E: 0.8, Z: 0, C: 0, A: 0.2 }
+            }, {
+                text: "📖 到处翻帖子，XXX结局到底什么意思？",
+                scores: { E: 0, Z: 0.8, C: 0, A: 0 }
+            }, {
+                text: "🛠️ 研究隐藏Boss/真结局/二周目，真正的游戏现在才开始",
+                scores: { E: 0, Z: 0.3, C: 0.6, A: 0 }
+            }, {
+                text: "🎭 刷到一条CP图，我又活了",
+                scores: { E: 0, Z: 0.2, C: 0, A: 0.8 }
+            }, {
+                text: "⏱️ 速通一遍，然后退款",
+                scores: { E: 0, Z: 0, C: 0, A: 0, G: 0.9 }
+            }]
+        }, {
+            text: "📦 游戏发布DLC，评价两极：剧情封神但玩法一般，你会？",
+            options: [
+                { text: "📖 剧情神作？买！玩法是什么我不知道", scores: { E: 1, Z: 0, C: 0, A: 0 } },
+                { text: "🎮 玩法不行？告辞，云一下剧情就够了", scores: { E: -1, Z: 0, C: 0, A: 0 } },
+                { text: "💰 等打折，我就不信它不骨折", scores: { E: 0, Z: 0, C: 0, A: 0 } },
+                { text: "🍿 先看主播玩，好玩再入", scores: { E: 0, Z: 0, C: 0, A: 0 } }
+            ]
+        }, {
+            text: "🎮 一个你曾经很爱的游戏，你已经很久没打开了。",
+            options: [
+                { text: "😅 电子ED了，看见游戏图标就累", scores: { E: 0, Z: 0.5, C: 0, A: 0 } },
+                { text: "🍿 不玩了，但B站每次推相关视频我还是会点进去", scores: { E: 0, Z: 0, C: 0, A: 0.6 } },
+                { text: "💼 库里吃灰，等我啥时候不用加班/带娃/过日子再说吧", scores: { E: 0, Z: 0.3, C: 0, A: 0.2 } },
+                { text: "🎯 打完就删，我的游戏生涯没有回锅肉", scores: { E: 0, Z: 0, C: 0, A: -0.5, G: -0.5 } }
+            ]
+        }];
+
+        // =====================================================
+        // 3. 引擎
+        // =====================================================
+        const TOTAL = QUESTIONS.length;
+        let current = 0;
+        let answers = new Array(TOTAL).fill(null);
+        const quizDiv = document.getElementById('quizCard');
+        const resultDiv = document.getElementById('resultArea');
+        const counterSpan = document.getElementById('questionCounter');
+        const fillDiv = document.getElementById('progressFill');
+
+        function updateProgress() {
+            const done = answers.filter(a => a !== null).length;
+            fillDiv.style.width = ((done / TOTAL) * 100) + '%';
+            counterSpan.innerText = done + ' / ' + TOTAL;
+        }
+
+        function render() {
+            const q = QUESTIONS[current];
+            let optsHtml = '';
+            q.options.forEach((opt, idx) => {
+                const sel = answers[current] === idx ? 'selected' : '';
+                optsHtml += '<div class="option ' + sel + '" data-opt="' + idx + '"><div class="radio-custom"></div><div class="option-text">' +
+                    escapeHtml(opt.text) + '</div></div>';
+            });
+            const html = '<div class="question-text">' + escapeHtml(q.text) +
+                '</div><div class="options" id="opts">' + optsHtml +
+                '</div><div class="nav-buttons"><button id="prevBtn" ' + (current === 0 ?
+                    'disabled style="opacity:0.5"' : '') + '>◀ 上一题</button><button id="nextBtn" class="primary">' +
+                (current === TOTAL - 1 ? '🎉 揭晓人设 🎉' : '下一题 ▶') + '</button></div>';
+            quizDiv.innerHTML = html;
+
+            document.querySelectorAll('.option').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    var idx = parseInt(this.dataset.opt);
+                    answers[current] = idx;
+                    document.querySelectorAll('.option').forEach(function(o) { o.classList.remove('selected'); });
+                    this.classList.add('selected');
+                    updateProgress();
+                });
+            });
+            document.getElementById('prevBtn').addEventListener('click', function() {
+                if (current > 0) { current--;
+                    render(); }
+            });
+            document.getElementById('nextBtn').addEventListener('click', function() {
+                if (answers[current] === null && !confirm('这题没选，跳过将中立倾向，继续吗？')) return;
+                if (current === TOTAL - 1) computeResult();
+                else { current++;
+                    render(); }
+                updateProgress();
+            });
+        }
+
+        // =====================================================
+        // 4. 图片卡生成
+        // =====================================================
+        function generateCardImage(data, code, dimsDisplay, secondaryData) {
+            const width = 800;
+            const height = 540;
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 0, height);
+            grad.addColorStop(0, '#151E2C');
+            grad.addColorStop(1, '#0A0C15');
+            ctx.fillStyle = grad;
+            ctx.roundRect(0, 0, width, height, 24);
+            ctx.fill();
+
+            ctx.strokeStyle = '#FFD96640';
+            ctx.lineWidth = 2;
+            ctx.roundRect(0, 0, width, height, 24);
+            ctx.stroke();
+
+            ctx.fillStyle = '#FFE6B3';
+            ctx.font = 'bold 22px "Segoe UI", "Poppins", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('🎭 游戏人设鉴定', 40, 55);
+
+            ctx.strokeStyle = '#FFD96630';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(40, 72);
+            ctx.lineTo(width - 40, 72);
+            ctx.stroke();
+
+            ctx.fillStyle = '#FFD966';
+            ctx.font = 'bold 40px "Segoe UI", "Poppins", sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(data.name, 40, 125);
+
+            ctx.fillStyle = '#AAB7E6';
+            ctx.font = '16px "Segoe UI", "Poppins", sans-serif';
+            ctx.fillText(code, 40, 160);
+
+            ctx.fillStyle = '#AAB7E6';
+            ctx.font = '14px "Segoe UI", "Poppins", sans-serif';
+            ctx.fillText('副职业：' + (secondaryData ? secondaryData.name : '无'), 40, 195);
+
+            ctx.fillStyle = '#FF6B4A';
+            ctx.font = '12px "Segoe UI", "Poppins", sans-serif';
+            ctx.fillText('⚠️ 危险指数 ' + data.danger, 40, 225);
+
+            ctx.fillStyle = '#C9D2F0';
+            ctx.font = 'italic 15px "Segoe UI", "Poppins", sans-serif';
+            const wrapText = function(text, x, y, maxWidth, lineHeight) {
+                const words = text.split('');
+                let line = '';
+                let yPos = y;
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line + words[i];
+                    const metrics = ctx.measureText(testLine);
+                    if (metrics.width > maxWidth && i > 0) {
+                        ctx.fillText(line, x, yPos);
+                        line = words[i];
+                        yPos += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, x, yPos);
+                return yPos;
+            };
+            let bibleY = wrapText('📖 ' + data.tagline, 40, 260, width - 80, 24);
+            bibleY += 10;
+
+            ctx.strokeStyle = '#FFD96620';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(40, bibleY + 10);
+            ctx.lineTo(width - 40, bibleY + 10);
+            ctx.stroke();
+
+            // 维度展示 - 单端显示
+            ctx.fillStyle = '#AAB7E6';
+            ctx.font = '13px "Segoe UI", "Poppins", sans-serif';
+            ctx.textAlign = 'left';
+            const dimStartY = bibleY + 35;
+
+            let dimY = dimStartY;
+            dimsDisplay.forEach(function(d) {
+                // 标签
+                ctx.fillStyle = '#FFD966';
+                ctx.font = 'bold 13px "Segoe UI", "Poppins", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(d.icon + ' ' + d.label, 40, dimY);
+
+                // 进度条
+                const barX = 210;
+                const barWidth = width - 280;
+                ctx.fillStyle = '#2E3A4A';
+                ctx.roundRect(barX, dimY - 8, barWidth, 6, 3);
+                ctx.fill();
+
+                const fillW = Math.min(barWidth, (d.percent / 100) * barWidth);
+                ctx.fillStyle = '#FFB347';
+                ctx.roundRect(barX, dimY - 8, fillW, 6, 3);
+                ctx.fill();
+
+                // 百分比
+                ctx.fillStyle = '#F0E6D0';
+                ctx.font = '12px "Segoe UI", "Poppins", sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(d.percent + '%', width - 40, dimY);
+
+                dimY += 35;
+            });
+
+            // 队友评价
+            ctx.fillStyle = '#AAB7E6';
+            ctx.font = '12px "Segoe UI", "Poppins", sans-serif';
+            ctx.textAlign = 'left';
+            const quoteY = dimY + 8;
+            ctx.fillText('🎯 队友评价：', 40, quoteY);
+            ctx.fillStyle = '#F0E6D0';
+            ctx.font = 'italic 13px "Segoe UI", "Poppins", sans-serif';
+            ctx.fillText('“' + data.quote + '”', 170, quoteY);
+
+            ctx.fillStyle = '#4A5570';
+            ctx.font = '10px "Segoe UI", "Poppins", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('© OCTAP', width - 40, height - 15);
+
+            return canvas;
+        }
+
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+                if (r > w / 2) r = w / 2;
+                if (r > h / 2) r = h / 2;
+                this.moveTo(x + r, y);
+                this.lineTo(x + w - r, y);
+                this.quadraticCurveTo(x + w, y, x + w, y + r);
+                this.lineTo(x + w, y + h - r);
+                this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                this.lineTo(x + r, y + h);
+                this.quadraticCurveTo(x, y + h, x, y + h - r);
+                this.lineTo(x, y + r);
+                this.quadraticCurveTo(x, y, x + r, y);
+                this.closePath();
+                return this;
+            };
+        }
+
+        // =====================================================
+        // 5. 动态副职业匹配
+        // =====================================================
+        function findSecondaryPersonality(scores, mainCode) {
+            var dimScores = {
+                E: scores.E,
+                P: -scores.E,
+                Z: scores.Z,
+                D: -scores.Z,
+                C: scores.C,
+                R: -scores.C,
+                A: scores.A,
+                G: -scores.A
+            };
+
+            var mainDim1 = mainCode.charAt(0);
+            var mainDim2 = mainCode.charAt(1);
+            var mainDim3 = mainCode.charAt(2);
+            var mainDim4 = mainCode.charAt(3);
+
+            var candidates = [];
+            var allDims = ['E', 'P', 'Z', 'D', 'C', 'R', 'A', 'G'];
+            for (var i = 0; i < allDims.length; i++) {
+                var d = allDims[i];
+                if (d === mainDim1 || d === mainDim2 || d === mainDim3 || d === mainDim4) continue;
+                candidates.push({ dim: d, score: Math.abs(dimScores[d] || 0) });
+            }
+
+            candidates.sort(function(a, b) { return b.score - a.score; });
+
+            if (candidates.length === 0 || candidates[0].score < 0.5) {
+                return null;
+            }
+
+            var topDim = candidates[0].dim;
+            var allCodes = Object.keys(PERSONALITY);
+            var matched = [];
+            for (var j = 0; j < allCodes.length; j++) {
+                var code = allCodes[j];
+                if (code === mainCode) continue;
+                if (code.indexOf(topDim) !== -1) {
+                    matched.push(code);
+                }
+            }
+
+            if (matched.length === 0) return null;
+            var secCode = matched[0];
+            return PERSONALITY[secCode];
+        }
+
+        // =====================================================
+        // 6. 结果计算与展示
+        // =====================================================
+        function computeResult() {
+            var scores = { E: 0, Z: 0, C: 0, A: 0, G: 0 };
+            for (var i = 0; i < TOTAL; i++) {
+                var ans = answers[i];
+                if (ans === null) continue;
+                var optScores = QUESTIONS[i].options[ans].scores;
+                for (var k in optScores) {
+                    if (scores.hasOwnProperty(k)) scores[k] += optScores[k];
+                }
+            }
+
+            var pct = function(sc, min, max) {
+                if (min === undefined) min = -12;
+                if (max === undefined) max = 12;
+                return Math.round(Math.min(100, Math.max(0, (sc - min) / (max - min) * 100)));
+            };
+
+            var pE = pct(scores.E),
+                pZ = pct(scores.Z),
+                pC = pct(scores.C),
+                pA = pct(scores.A);
+            var tE = scores.E >= 0 ? 'E' : 'P';
+            var tZ = scores.Z >= 0 ? 'Z' : 'D';
+            var tC = scores.C >= 0 ? 'C' : 'R';
+            var tA = scores.A >= 0 ? 'A' : 'G';
+            var code = tE + tZ + tC + tA;
+
+            var data = PERSONALITY[code] || PERSONALITY['EZCA'];
+            var secondaryData = findSecondaryPersonality(scores, code);
+
+            // 构建维度显示数组（只显示得分更高的一端）
+            var dimsDisplay = [];
+
+            // 维度1: E/P
+            if (tE === 'E') {
+                dimsDisplay.push({ label: '画面党', percent: pE, icon: '🎨' });
+            } else {
+                dimsDisplay.push({ label: '玩法党', percent: 100 - pE, icon: '🎮' });
+            }
+
+            // 维度2: Z/D
+            if (tZ === 'Z') {
+                dimsDisplay.push({ label: '剧情党', percent: pZ, icon: '📖' });
+            } else {
+                dimsDisplay.push({ label: '爽玩党', percent: 100 - pZ, icon: '🎯' });
+            }
+
+            // 维度3: C/R
+            if (tC === 'C') {
+                dimsDisplay.push({ label: '操作党', percent: pC, icon: '⚔️' });
+            } else {
+                dimsDisplay.push({ label: '逃课党', percent: 100 - pC, icon: '📱' });
+            }
+
+            // 维度4: A/G
+            if (tA === 'A') {
+                dimsDisplay.push({ label: 'XP党', percent: pA, icon: '🎭' });
+            } else {
+                dimsDisplay.push({ label: '强度党', percent: 100 - pA, icon: '📊' });
+            }
+
+            var dimMap = {
+                'E': '画面党',
+                'P': '玩法党',
+                'Z': '剧情党',
+                'D': '爽玩党',
+                'C': '操作党',
+                'R': '逃课党',
+                'A': 'XP党',
+                'G': '强度党'
+            };
+
+            var shareText =
+                '🎮 游戏人设鉴定 · 我的结果\n' +
+                '主职业：' + data.name + '\n' +
+                '副职业：' + (secondaryData ? secondaryData.name : '无') + '\n' +
+                '📖 ' + data.tagline + '\n' +
+                '代码：' + code + '\n' +
+                dimsDisplay.map(function(d) { return d.icon + ' ' + d.label + ' ' + d.percent + '%'; }).join(' · ');
+
+            quizDiv.style.display = 'none';
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML =
+                '<div class="result-type">🎭 玩家身份档案</div>' +
+                '<div style="font-size:0.9rem;color:#AAB7E6;margin-bottom:4px;">' + code + '</div>' +
+
+                '<div class="profile-card">' +
+                '<div class="profile-main">' + data.name + '</div>' +
+                '<div class="profile-sub">副职业：' + (secondaryData ? secondaryData.name : '无') + '</div>' +
+                '<div class="profile-danger">⚠️ 危险指数 ' + data.danger + '</div>' +
+                '<div class="profile-quote">📖 ' + data.tagline + '</div>' +
+                '<div class="profile-meta">🎯 队友评价：<span>' + data.quote + '</span></div>' +
+                '</div>' +
+
+                '<div style="font-size:0.85rem;color:#AAB7E6;margin:8px 0 4px 0;">📊 维度倾向</div>' +
+                '<div class="result-stats">' +
+                dimsDisplay.map(function(d) {
+                    return '<div class="dimension-item">' +
+                        '<div class="dimension-label">' + d.icon + ' ' + d.label + '</div>' +
+                        '<div class="dimension-bar-bg"><div class="dimension-bar-fill" style="width:' + d.percent +
+                        '%;"></div></div>' +
+                        '<div class="dimension-percent">' + d.percent + '%</div>' +
+                        '</div>';
+                }).join('') +
+                '</div>' +
+
+                '<div class="result-buttons">' +
+                '<button class="btn-save" id="saveImageBtn">💾 保存图片</button>' +
+                '<button class="btn-copy" id="copyImageBtn">📋 复制图片</button>' +
+                '<button class="btn-restart" id="restartTestBtn">🔄 重新测试</button>' +
+                '</div>';
+
+            document.getElementById('saveImageBtn').addEventListener('click', function() {
+                var canvas = generateCardImage(data, code, dimsDisplay, secondaryData);
+                var link = document.createElement('a');
+                link.download = '游戏人设_' + data.name.replace(/[^a-zA-Z\u4e00-\u9fa5]/g, '') + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+
+            document.getElementById('copyImageBtn').addEventListener('click', function() {
+                var canvas = generateCardImage(data, code, dimsDisplay, secondaryData);
+                canvas.toBlob(function(blob) {
+                    navigator.clipboard.write([
+                        new ClipboardItem({
+                            'image/png': blob
+                        })
+                    ]).then(function() {
+                        alert('✅ 图片已复制到剪贴板，可以直接粘贴到聊天窗口！');
+                    }).catch(function() {
+                        alert('⚠️ 复制失败，请使用保存图片功能。');
+                    });
+                });
+            });
+
+            document.getElementById('restartTestBtn').addEventListener('click', function() {
+                answers.fill(null);
+                current = 0;
+                quizDiv.style.display = 'block';
+                resultDiv.style.display = 'none';
+                render();
+                updateProgress();
+            });
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/[&<>]/g, function(m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' } [m]; });
+        }
+        render();
+        updateProgress();
+    </script>
+</body>
+</html>
