@@ -1,0 +1,2 @@
+# GameStereoTypes
+一个由SBTI人格测试启发的游戏刻板印象小测试
